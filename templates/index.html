@@ -1,0 +1,224 @@
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Syllable Soup unique name generator.">
+    <meta name="author" content="Michael Mallok">
+    <link rel="icon" type="image/png" href="/static/favicon.png" />
+
+    <!-- Bootstrap core CSS -->
+    <link href="static/bootstrap.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="static/starter-template.css" rel="stylesheet">
+
+    <link href="static/bootstrap-slider.css" rel="stylesheet">
+</head>
+
+<title>Syllable Soup</title>
+
+<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+            <img src="/static/favicon.png" class="rounded px-3" alt="icon" width="60"
+                class="d-inline-block align-text-top">Syllable Soup
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mynavbar"
+            aria-controls="mynavbar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="mynavbar">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link active" aria-current="page" href="#">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/about">About</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown"
+                        aria-haspopup="true" aria-disabled="true" aria-expanded="false">Modes</a>
+                    <div class="dropdown-menu" aria-labelledby="dropdown01">
+                        <a class="dropdown-item" href="#">Random Suggestion</a>
+
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https:humanfractal.art">Art</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<main>
+    <div class="container">
+        <div>
+            <br>
+            <p class="display-3">This is Syllable Soup</p>
+            <div class="bd-example">
+                <p class="lead">Generate unique but plausible names!
+
+            </div>
+        </div>
+        <hr class="my-4">
+        <form id=name-form>
+            <p class="h5 mt-3">What kind of name are you looking for?</p>
+            <div class="btn-group" role="group">
+                <input class="btn-check" type="radio" name="gender" id="gender1" autocomplete="off" value="female">
+                <label class="btn btn-outline-primary" for="gender1">
+                    Female
+                </label>
+                <input class="btn-check" type="radio" name="gender" id="gender2" autocomplete="off" value="male">
+
+                <label class="btn btn-outline-primary" for="gender2">
+                    Male
+                </label>
+                <input class="btn-check" type="radio" name="gender" id="gender3" autocomplete="off" value="unisex">
+
+                <label class="btn btn-outline-primary" for="gender3">
+                    Unisex
+                </label>
+                <input class="btn-check" type="radio" name="gender" id="gender4" autocomplete="off" value="all">
+                <label class="btn btn-outline-primary" for="gender4">
+                    Surprise me!
+                </label>
+            </div>
+            <div>
+                <p class="h5 mt-5">How long should your name be?</p>
+            </div>
+            <div>
+                <input id="ex1" data-slider-id='ex1Slider' type="text" data-slider-min="4" data-slider-max="15"
+                    data-slider-step="1" data-slider-value="6" name="length" />
+            </div>
+            {% for country in countries %}
+            <li><a class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked{{ loop.index }}"
+                        checked>
+                    <label class="form-check-label" for="flexCheckChecked{{ loop.index }}">
+                        {{ loop.index }} {{ country }}
+                    </label>
+                </a></li>
+            {% endfor %}
+            <div>
+                <p class="h5 mt-5">Choose the origin country?</p>
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuClickableInside"
+                    data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
+                    Countries
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuClickableInside">
+                    {% for country in countries %}
+                    <li><a class="form-check">
+                            <input class="form-check-input" type="checkbox" value=""
+                                id="flexCheckChecked{{ loop.index }}" checked>
+                            <label class="form-check-label" for="flexCheckChecked">
+                                {{ country }}
+                            </label>
+                        </a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <hr class="my-4">
+            <br>
+            <button class="btn btn-primary btn-lg" id="generate" href="/" type="submit" style="width: 200;">Generate!
+            </button>
+        </form>
+        <br>
+        <hr class="my-4">
+        <div>
+            <p class="h1">Your unique name is:</p>
+        </div>
+        <div class="container">
+            <div class="bg-light p-5 rounded-lg m-3">
+
+                <h1 class="display-4">
+                    {% if random_name %}
+                    {{ random_name }}
+                    {% else %}
+                    Press generate!
+                    {% endif %}
+                </h1>
+            </div>
+        </div>
+        <h5 class="display-7">What does this name share similarities with?</h5>
+
+        <div class="table table-sm">
+            <table class="table">
+                <tbody>
+                    {% for similarity in similarities %}
+                    <tr>
+                        <th scope="col">{{ similarity }}</th>
+                        <th scope="col">{{ similarities[similarity] }}</th>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        </p>
+</main>
+
+<footer class="footer mt-auto py-3 bg-light">
+    <div class="container">
+        <span>
+            <a href="/legal" class="text-muted">© 2021 Michael Mallok</a>
+        </span>
+    </div>
+</footer>
+
+<script src="static/jquery-3.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+<script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
+<script src="static/popper.js"></script>
+<script src="static/bootstrap.js"></script>
+<script src="static/bootstrap-slider.js"></script>
+<script src="static/form.js"></script>
+
+<script>
+    $(document).ready(function () {
+        var radios = document.getElementsByName("gender");
+        var val = localStorage.getItem('gender');
+        for (var i = 0; i < radios.length; i++) {
+            if (radios[i].value == val) {
+                radios[i].checked = true;
+            }
+        }
+        $('input[name="gender"]').on('change', function () {
+            localStorage.setItem('gender', $(this).val());
+
+        });
+    });
+</script>
+<script>
+    var slider = new Slider('#ex1', {
+        formatter: function (value) {
+            return 'Current length: ' + value;
+        }
+    });
+    var val = localStorage.getItem("length");
+    slider.setValue(val);
+    $('input[name="length"]').on('change', function () {
+        localStorage.setItem('length', $(this).val());
+
+    });
+</script>
+
+<script>
+    $(document).ready(function () {
+        $("#generate").click(function () {
+            // disable button
+            $(this).prop("disabled", true);
+            // add spinner to button
+            $(this).html(
+                '<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> Generating...'
+            );
+            $("#name-form").submit();
+        });
+
+    });
+</script>
+
+</body>
+
+</html>
