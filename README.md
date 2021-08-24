@@ -5,8 +5,8 @@
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
-  <a href="https://raw.githubusercontent.com/MaelkoM/syllable-soup/main/static/favicon.png">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
+  <a href="https://www.syllable-soup.com">
+    <img src="[images/logo.png](https://raw.githubusercontent.com/MaelkoM/syllable-soup/main/static/favicon.png)" alt="Logo" width="80" height="80">
   </a>
 
   <h3 align="center">Syllable Soup</h3>
