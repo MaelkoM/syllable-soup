@@ -1,12 +1,13 @@
 """Generating names with a Markov p-matrix."""
-import numpy as np
 import json
+import numpy as np
+
 
 ORDER = 2
 NAME_LENGTH = 15
 NAME_COUNT = 5
 GENDER = "unisex"
-COUNTRIES = ["us", "gb", "other"]
+COUNTRIES = ("us", "gb", "other")
 
 
 class MarkovGenerator:
@@ -36,33 +37,41 @@ class MarkovGenerator:
         self.load_profanities()
 
     def load_country_list(self) -> list:
+        """INSERT DOCSTRING."""
         self.country_list = list(
-            set([self.name_dict[name]["country"] for name in self.name_dict])
+            set(self.name_dict[name]["country"] for name in self.name_dict)
         )
 
     def return_countries(self) -> list:
+        """INSERT DOCSTRING."""
         return self.country_list
 
     def change_countries(self, countries: list) -> list:
+        """INSERT DOCSTRING."""
         self.countries = countries
 
     def load_profanities(self) -> None:
+        """INSERT DOCSTRING."""
         with open("data/profanity.json", "r") as prof_file:
             self.profanities = json.load(prof_file, encoding="utf-8")
 
     def change_order(self, order: int) -> None:
+        """INSERT DOCSTRING."""
         self.order = order
 
     def change_gender(self, gender: str) -> None:
+        """INSERT DOCSTRING."""
         if gender != self.gender:
             self.gender = gender
             self.choose_names_subset()
             self.create_letter_list()
 
     def change_length(self, length: int) -> None:
+        """INSERT DOCSTRING."""
         self.length = length
 
     def get_names(self) -> list:
+        """INSERT DOCSTRING."""
         return self.names
 
     def load_name_dict(self) -> list:
@@ -71,6 +80,7 @@ class MarkovGenerator:
             self.name_dict = json.load(name_file)
 
     def choose_names_subset(self):
+        """INSERT DOCSTRING."""
         if self.countries == []:
             self.countries = self.country_list
         print(self.countries)
@@ -129,6 +139,7 @@ class MarkovGenerator:
     #            self.names = [name.strip() for name in name_file.readlines()]
 
     def generate_first_list(self) -> list:
+        """INSERT DOCSTRING."""
         self.first_list = [
             name[: self.order] for name in self.names if len(name) > self.order
         ]
@@ -153,14 +164,11 @@ class MarkovGenerator:
 
     def check_name(self, name: str) -> bool:
         """INSERT DOCSTRING."""
-        if (
+        return bool(
             name not in self.names
             and name not in self.old_generated_names
             and name not in self.profanities
-        ):
-            return True
-        else:
-            return False
+        )
 
     def generate_new_name(self) -> list:
         """INSERT DOCSTRING."""
@@ -172,6 +180,7 @@ class MarkovGenerator:
             self.new_names.append(new_name)
 
     def accumulate_states(self, new_name: list, state: str) -> list:
+        """INSERT DOCSTRING."""
         while state != "stop":
             if state in self.prob_dict.keys():
                 p_array = self.prob_dict[state]
@@ -213,10 +222,11 @@ class MarkovGenerator:
         return new_name
 
     def get_state_p_array(self, state: str) -> np.array:
+        """INSERT DOCSTRING."""
         p_array = np.zeros(len(self.letters))
         for name in self.names:
             if state in name and len(name) > self.order:
-                for index, character in enumerate(name):
+                for index in enumerate(name):
                     if name[index : index + self.order] == state:
                         p_array = self.generate_p_array(
                             name_f=name, index_f=index, p_array_f=p_array
@@ -224,6 +234,7 @@ class MarkovGenerator:
         return p_array
 
     def generate_p_array(self, name_f, index_f, p_array_f):
+        """INSERT DOCSTRING."""
         if name_f[index_f + self.order : index_f + self.order * 2]:
             new_index = np.asarray(
                 np.array(self.letters)
@@ -262,9 +273,6 @@ class JaroChecker:
     linuxwords.txt is from http://users.cs.duke.edu/~ola/ap/linuxwords
     """
 
-    def __init__(self) -> None:
-        None
-
     def jaro_winkler_distance(self, st1, st2):
         """
         Compute Jaro-Winkler distance between two strings.
@@ -280,8 +288,7 @@ class JaroChecker:
         for idx1, ch1 in enumerate(st1):
             for idx2, ch2 in enumerate(st2):
                 if (
-                    idx2 <= idx1 + delta
-                    and idx2 >= idx1 - delta
+                    idx1 - delta <= idx2 <= idx1 + delta
                     and ch1 == ch2
                     and not flag[idx2]
                 ):
@@ -320,18 +327,19 @@ class JaroChecker:
         return arr if len(arr) <= maxtoreturn else arr[:maxtoreturn]
 
     def check_new_names(self, new_names, corpus):
+        """INSERT DOCSTRING."""
         similarities = {}
         for name in new_names:
-            for w in self.within_distance(0.9, name, 5, corpus):
+            for word in self.within_distance(0.9, name, 5, corpus):
                 similarities[
-                    w
-                ] = f"{100 - round(self.jaro_winkler_distance(name, w)*100, 1)}%"
+                    word
+                ] = f"{100 - round(self.jaro_winkler_distance(name, word)*100, 1)}%"
         return similarities
 
 
 if __name__ == "__main__":
     mark = MarkovGenerator()
-    new_names = mark.return_new_names(2)
-    mark.save_names(new_names)
+    generated_names = mark.return_new_names(2)
+    mark.save_names(generated_names)
     jar = JaroChecker()
-    jar.check_new_names(new_names, mark.get_names())
+    jar.check_new_names(generated_names, mark.get_names())

@@ -1,7 +1,9 @@
 """GAN implementation for name generation."""
 import time
-import tensorflow as tf
 import json
+import os
+import tensorflow as tf
+
 from tensorflow.keras.layers import (
     Dense,
     BatchNormalization,
@@ -14,12 +16,13 @@ from tensorflow.keras.layers import (
 from tensorflow.keras.models import Sequential
 import numpy as np
 
-import os
+
 from IPython import display
 
 
 EPOCHS = 5000
 MULTIPLIER = 5
+CHECKPOINT_DIR = "./training_checkpoints"
 
 
 def create_letter_list(names):
@@ -221,15 +224,14 @@ print("disc", tf.expand_dims(generated_name, -1).shape)
 print("decision", decision.numpy()[0][0])
 
 
-checkpoint_dir = "./training_checkpoints"
-checkpoint_prefix = os.path.join(checkpoint_dir, "ckpt")
+checkpoint_prefix = os.path.join(CHECKPOINT_DIR, "ckpt")
 checkpoint = tf.train.Checkpoint(
     generator_optimizer=generator_optimizer,
     discriminator_optimizer=discriminator_optimizer,
     generator=generator,
     discriminator=discriminator,
 )
-checkpoint.restore(tf.train.latest_checkpoint(checkpoint_dir))
+checkpoint.restore(tf.train.latest_checkpoint(CHECKPOINT_DIR))
 
 num_examples_to_generate = 16
 
@@ -269,22 +271,3 @@ def train_step(names):
 
 
 train(train_dataset, EPOCHS)
-
-# checkpoint.restore(tf.train.latest_checkpoint(checkpoint_dir))
-
-l_list = []
-for number in generated_name[0]:
-    l_list.append(np.round(number))
-
-new_names = []
-with open("data/predictions.txt", mode="r") as name_preds:
-    new_names = name_preds.readlines()
-
-new_name_ints = np.array(name_ints) * len(letters)
-
-name_tensor = []
-
-new_name_int = np.array(name_tensor)
-new_name_int = new_name_int * len(letters)
-new_name = "".join([letters[int(np.round(number))] for number in new_name_int])
-print(new_name)
