@@ -219,7 +219,7 @@ class MarkovGenerator:
             list: List of old generated names
         """
         try:
-            with open(f"data/neue_namen_{self.gender}.txt", mode="r+") as name_file:
+            with open(f"data/neue_namen_{self.gender}.txt", mode="r") as name_file:
                 self.old_generated_names = [
                     name.strip() for name in name_file.readlines()
                 ]
@@ -255,7 +255,7 @@ class MarkovGenerator:
         return bool(
             name not in self.names
             and name not in self.old_generated_names
-            and name not in self.profanities
+            and name.lower() not in self.profanities
             and name not in self.new_names
         )
 
@@ -526,6 +526,6 @@ if __name__ == "__main__":
         countries.append(countries.remove("cn"))
         mark = MarkovGenerator(gender=gender, random_length=True, countries=countries,)
         generated_names = mark.return_new_names(genders[gender])
-        mark.save_names(generated_names, json=True, mode="a+")
+        mark.save_names(generated_names, json=False, mode="w")
         # jar = JaroChecker()[i][i]
         # jar.check_new_names(generated_names, mark.get_names())
